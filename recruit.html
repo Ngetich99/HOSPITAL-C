@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Canaan Hospital Recruitment</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary-color: #1e3a8a;
+      --accent-color: #3b82f6;
+      --bg-color: #f0f4ff;
+      --text-color: #1f2937;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      line-height: 1.6;
+    }
+
+    header {
+      background-color: var(--primary-color);
+      color: white;
+      padding: 2rem 1rem;
+      text-align: center;
+    }
+
+    header h1 {
+      font-size: 2.5rem;
+    }
+
+    .container {
+      max-width: 960px;
+      margin: auto;
+      padding: 2rem 1rem;
+    }
+
+    h2 {
+      margin-bottom: 1rem;
+      color: var(--primary-color);
+    }
+
+    .jobs {
+      display: grid;
+      gap: 1.5rem;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    }
+
+    .job-card {
+      background: white;
+      padding: 1.5rem;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+      transition: transform 0.3s ease;
+    }
+
+    .job-card:hover {
+      transform: translateY(-5px);
+    }
+
+    .application-form {
+      background: white;
+      margin-top: 3rem;
+      padding: 2rem;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+    }
+
+    .application-form input,
+    .application-form textarea {
+      width: 100%;
+      padding: 0.8rem;
+      margin-bottom: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 1rem;
+    }
+
+    .application-form input[type="file"] {
+      border: none;
+    }
+
+    .application-form button {
+      background-color: var(--accent-color);
+      color: white;
+      padding: 0.9rem 1.5rem;
+      font-size: 1rem;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .application-form button:hover {
+      background-color: #2563eb;
+    }
+
+    #status {
+      margin-top: 1rem;
+      font-weight: 600;
+    }
+
+    footer {
+      background-color: var(--primary-color);
+      color: white;
+      text-align: center;
+      padding: 1rem;
+      margin-top: 3rem;
+    }
+
+    @media (max-width: 600px) {
+      header h1 {
+        font-size: 1.8rem;
+      }
+
+      .application-form {
+        padding: 1.2rem;
+      }
+
+      .job-card {
+        padding: 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>Canaan Hospital</h1>
+    <p>Join Our Team — Apply Below</p>
+  </header>
+
+  <div class="container">
+    <h2>Open Positions</h2>
+    <div class="jobs">
+      <div class="job-card">
+        <h3>Registered Nurse</h3>
+        <p><strong>Location:</strong> Nairobi</p>
+        <p><strong>Type:</strong> Full-Time</p>
+      </div>
+      <div class="job-card">
+        <h3>Lab Technician</h3>
+        <p><strong>Location:</strong> Nakuru</p>
+        <p><strong>Type:</strong> Full-Time</p>
+      </div>
+      <div class="job-card">
+        <h3>ICT Officer</h3>
+        <p><strong>Location:</strong> Nairobi</p>
+        <p><strong>Type:</strong> Contract</p>
+      </div>
+    </div>
+
+    <div class="application-form">
+      <h2>Submit Your Application</h2>
+      <form id="resumeForm">
+        <input type="text" name="name" placeholder="Full Name" required>
+        <input type="email" name="email" placeholder="Email Address" required>
+        <input type="text" name="position" placeholder="Position Applying For" required>
+        <textarea name="message" rows="5" placeholder="Cover Letter or Message" required></textarea>
+        <input type="file" id="resume" accept=".pdf,.doc,.docx" required>
+        <button type="submit">Upload Resume</button>
+      </form>
+      <p id="status"></p>
+    </div>
+  </div>
+
+  <footer>
+    <p>&copy; <span id="year"></span> Canaan Hospital</p>
+  </footer>
+
+  <script>
+    document.getElementById("year").textContent = new Date().getFullYear();
+
+    const scriptURL = 'YOUR_GOOGLE_SCRIPT_WEB_APP_URL'; // Replace with your actual Google Apps Script URL
+
+    document.getElementById('resumeForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      const file = document.getElementById('resume').files[0];
+      const reader = new FileReader();
+
+      reader.onload = function(event) {
+        const base64Data = event.target.result.split(',')[1];
+        const formData = new FormData();
+        formData.append('filedata', base64Data);
+        formData.append('file', file.name);
+        formData.append('mimeType', file.type);
+        formData.append('name', file.name);
+
+        fetch(scriptURL, {
+          method: 'POST',
+          body: formData
+        })
+        .then(res => res.text())
+        .then(response => {
+          document.getElementById('status').textContent = response.includes("Success")
+            ? "✅ Resume uploaded successfully!"
+            : "❌ Upload failed: " + response;
+        })
+        .catch(err => {
+          document.getElementById('status').textContent = "❌ Error: " + err.message;
+        });
+      };
+
+      reader.readAsDataURL(file);
+    });
+  </script>
+
+</body>
+</html>
