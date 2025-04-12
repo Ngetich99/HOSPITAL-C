@@ -64,4 +64,13 @@ var swiper = new Swiper(".mySwiper", {
             slidesPerView: 3
         }
   }
+
+    document.addEventListener('mousemove', (e) => {
+  const x = e.clientX / innerWidth;
+  const y = e.clientY / innerHeight;
+  const dist = Math.sqrt(Math.pow(x-0.5,2) + Math.pow(y-0.5,2));
+  
+  document.documentElement.style.setProperty('--mouse-x', x);
+  document.documentElement.style.setProperty('--mouse-y', y);
+  document.documentElement.style.setProperty('--mouse-dist', dist);
 });
