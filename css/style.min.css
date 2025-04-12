@@ -25,6 +25,8 @@
 .blinking-header {
   animation: pulse 2s ease-in-out infinite;
   /* Rest of the styles remain the same */
+    font-size: 1.2rem;
+
 }
 
 @keyframes pulse {
