@@ -22,20 +22,70 @@
     width: 40px;         /* Adjust logo size */
     height: auto;        /* Maintain aspect ratio */
 }
+/* ===== Ultra Attractive Blinking WELCOME Header ===== */
 .blinking-header {
-  animation: pulse 2s ease-in-out infinite;
-  /* Rest of the styles remain the same */
-    font-size: 3rem; /* Increased from 1.2rem to 2rem (~32px) */
-   color: #ffffff; /* Hex code for white */
-  text-align: center;
-  font-weight: bold;
-  margin-bottom: 0.5rem;
-  text-transform: uppercase; /* Optional: Makes "WELCOME" more prominent */
+    font-family: 'Poppins', 'Arial', sans-serif; /* Modern font */
+    font-size: 5rem;
+    font-weight: 900;
+    text-align: center;
+    margin: 1em 0;
+    letter-spacing: 2px;
+    
+    /* Gradient Text Effect */
+    background: linear-gradient(45deg, 
+        #ff00cc 0%, 
+        #ff0066 25%, 
+        #3300ff 50%, 
+        #00ccff 75%, 
+        #00ff99 100%);
+    background-size: 300% 300%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    
+    /* Blinking + Gradient Animation */
+    animation: 
+        blink 2.5s ease infinite,
+        gradientFlow 12s ease infinite;
+    
+    /* Neon Glow Effect */
+    text-shadow: 
+        0 0 10px rgba(255, 255, 255, 0.7),
+        0 0 20px rgba(100, 200, 255, 0.5);
+    
+    /* Hover Effects */
+    transition: all 0.4s ease-out;
+    cursor: pointer;
 }
 
-/* Blinking animation */
+/* Hover: Amplify glow and size */
+.blinking-header:hover {
+    transform: scale(1.08);
+    text-shadow: 
+        0 0 15px rgba(255, 255, 255, 0.9),
+        0 0 30px rgba(100, 220, 255, 0.7);
+}
+
+/* Blinking Effect (Smooth opacity change) */
 @keyframes blink {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 1; }
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.85; }
+}
+
+/* Gradient Flow Animation */
+@keyframes gradientFlow {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+/* Optional: Add a dark background for better contrast */
+body {
+    background-color: #0a0a1a;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
 }
 */
