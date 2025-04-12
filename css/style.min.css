@@ -22,4 +22,14 @@
     width: 40px;         /* Adjust logo size */
     height: auto;        /* Maintain aspect ratio */
 }
+.blinking-header {
+  animation: pulse 2s ease-in-out infinite;
+  /* Rest of the styles remain the same */
+}
+
+@keyframes pulse {
+  0% { opacity: 0.8; }
+  50% { opacity: 1; }
+  100% { opacity: 0.8; }
+}
 */
