@@ -25,13 +25,17 @@
 .blinking-header {
   animation: pulse 2s ease-in-out infinite;
   /* Rest of the styles remain the same */
-    font-size: 1.2rem;
-
+    font-size: 2rem; /* Increased from 1.2rem to 2rem (~32px) */
+  color: #2a7fba;
+  text-align: center;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+  text-transform: uppercase; /* Optional: Makes "WELCOME" more prominent */
 }
 
-@keyframes pulse {
-  0% { opacity: 0.8; }
-  50% { opacity: 1; }
-  100% { opacity: 0.8; }
+/* Blinking animation */
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
 }
 */
