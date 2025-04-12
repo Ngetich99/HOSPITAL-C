@@ -11,4 +11,15 @@
   max-width: 150px;  /* Adjust to control the size of the logos */
   height: auto; /* Keep aspect ratio intact */
 }
+.nav__logo {
+    display: flex;        /* Align logo and text horizontally */
+    align-items: center;  /* Center vertically */
+    gap: 10px;           /* Space between logo and text */
+    text-decoration: none; /* Remove underline from link */
+}
+
+.nav__logo-img {
+    width: 40px;         /* Adjust logo size */
+    height: auto;        /* Maintain aspect ratio */
+}
 */
