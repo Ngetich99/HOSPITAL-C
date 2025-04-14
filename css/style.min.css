@@ -8,7 +8,7 @@
 }
 
 .custom-logo {
-  max-width: 150px;  /* Adjust to control the size of the logos */
+  max-width: 100px;  /* Adjust to control the size of the logos */
   height: auto; /* Keep aspect ratio intact */
 }
 .nav__logo {
