@@ -11,6 +11,134 @@
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <!-- Link Swiper's CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css" />
+    <style>
+        /* Cannan Care Chatbot Styles */
+        #cannan-care-container {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 350px;
+            height: 500px;
+            border: 1px solid #0077cc;
+            border-radius: 10px;
+            background: white;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+            z-index: 1000;
+            font-family: Arial, sans-serif;
+            transform: translateY(100%);
+            opacity: 0;
+            transition: transform 0.3s ease, opacity 0.3s ease;
+        }
+        
+        #cannan-care-container.active {
+            transform: translateY(0);
+            opacity: 1;
+        }
+        
+        #cannan-care-header {
+            background: #0077cc;
+            color: white;
+            padding: 10px;
+            border-top-left-radius: 9px;
+            border-top-right-radius: 9px;
+            font-weight: bold;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        #cannan-care-messages {
+            flex: 1;
+            padding: 10px;
+            overflow-y: auto;
+            background: #f9f9f9;
+        }
+        
+        #cannan-care-input {
+            display: flex;
+            padding: 10px;
+            border-top: 1px solid #ddd;
+            background: white;
+        }
+        
+        #cannan-care-user-input {
+            flex: 1;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        
+        #cannan-care-send-btn {
+            margin-left: 5px;
+            padding: 8px 15px;
+            background: #0077cc;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        
+        .cannan-care-bot-message, .cannan-care-user-message {
+            margin: 5px 0;
+            padding: 8px 12px;
+            border-radius: 4px;
+            max-width: 80%;
+            word-wrap: break-word;
+        }
+        
+        .cannan-care-bot-message {
+            background: #e3f2fd;
+            align-self: flex-start;
+            border-bottom-left-radius: 0;
+        }
+        
+        .cannan-care-user-message {
+            background: #0077cc;
+            color: white;
+            align-self: flex-end;
+            margin-left: auto;
+            border-bottom-right-radius: 0;
+        }
+        
+        .cannan-care-disclaimer {
+            font-size: 10px;
+            color: #666;
+            padding: 5px 10px;
+            text-align: center;
+            background: #f0f0f0;
+        }
+        
+        #cannan-care-minimize {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 18px;
+            cursor: pointer;
+        }
+        
+        #cannan-care-launcher {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 60px;
+            height: 60px;
+            background: #0077cc;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            z-index: 999;
+        }
+        
+        #cannan-care-launcher i {
+            font-size: 24px;
+        }
+    </style>
 </head>
 
 <body>
@@ -73,7 +201,7 @@
                 clients, we've seen firsthand the impact of accessible
                 healthcare. Thank you for entrusting us with your care.“
                 <BR>
-                Dr Philip K . Lang’at
+                Dr Philip K . Lang'at
                 .</p>
  <h2>Our Services</h2>
         <p>At Cannan Hospital and Wellness Centre, we believe that every individual deserves exceptiona
@@ -284,8 +412,119 @@
             <small>&copy; Copyright Cannan 2025. All Rights Reserved</small>
         </div>
     </footer>
+
+    <!-- Cannan Care Chatbot -->
+    <div id="cannan-care-launcher">
+        <i class='bx bx-message-rounded'></i>
+    </div>
+    
+    <div id="cannan-care-container">
+        <div id="cannan-care-header">
+            <span>Cannan Care</span>
+            <button id="cannan-care-minimize"><i class='bx bx-minus'></i></button>
+        </div>
+        <div id="cannan-care-messages">
+            <div class="cannan-care-bot-message">Hello! I'm Cannan Care, your virtual assistant. How can I help you today? You can ask about:<br>
+            - Appointments<br>
+            - Our Services<br>
+            - Location/Hours<br>
+            - Emergency contacts<br>
+            - Billing questions</div>
+        </div>
+        <div class="cannan-care-disclaimer">Note: This is not for emergencies. For medical emergencies, please call 0721902956 or 0722933485 immediately.</div>
+        <div id="cannan-care-input">
+            <input type="text" id="cannan-care-user-input" placeholder="Type your question...">
+            <button id="cannan-care-send-btn">Send</button>
+        </div>
+    </div>
+
     <!-- Swiper JS -->
     <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
     <script src="./main.js"></script>
+    
+    <!-- Cannan Care Chatbot Script -->
+    <script>
+        // Chatbot functionality
+        const responses = {
+            "appointment": "You can schedule appointments by calling (072) 190-2956 or using our online form at the 'Make Appointment' section of our website.",
+            "location": "Cannan Hospital is located at Chepseon along Chepseon-Kipkelion Road. You can find detailed directions on our 'Our Location' page.",
+            "hours": "Our regular hours are Monday-Friday 8:00 AM - 5:00 PM, Saturday 9:00 AM - 1:00 PM. Emergency services are available 24/7.",
+            "billing": "For billing questions, please call (072) 293-3485 or email billing@cannanhospital.org",
+            "emergency": "For medical emergencies, please call 0721902956 or 0722933485 immediately or come to our 24-hour emergency department.",
+            "service": "We offer: 1) Theatre Services 2) Laboratory 3) Dental Clinic 4) Nursing Care 5) Maternity Care 6) 24-Hour Emergency Services. Which service would you like to know more about?",
+            "lab": "Our accredited laboratory offers comprehensive testing including hematology, chemistry, microbiology, and specialized tests. Results are typically available within 24-48 hours.",
+            "dental": "Our dental clinic provides routine checkups, cleanings, fillings, extractions, and cosmetic dentistry. Call (072) 190-2956 to schedule an appointment.",
+            "maternity": "Our maternity services include prenatal care, delivery, postnatal care, and newborn services. We have a dedicated maternity ward with experienced staff.",
+            "contact": "You can reach us at:<br>- Phone: 0721902956 or 0722933485<br>- Email: director@cannanhospital.org<br>- Address: Chepseon along Chepseon-Kipkelion Road",
+            "default": "I'm sorry, I didn't understand that. Please ask about appointments, services, location, hours, or contact information. For medical advice, please consult with our healthcare providers."
+        };
+
+        // DOM elements
+        const launcher = document.getElementById('cannan-care-launcher');
+        const container = document.getElementById('cannan-care-container');
+        const minimizeBtn = document.getElementById('cannan-care-minimize');
+        const sendBtn = document.getElementById('cannan-care-send-btn');
+        const userInput = document.getElementById('cannan-care-user-input');
+        const messagesContainer = document.getElementById('cannan-care-messages');
+
+        // Toggle chat visibility
+        launcher.addEventListener('click', () => {
+            container.classList.toggle('active');
+        });
+
+        minimizeBtn.addEventListener('click', () => {
+            container.classList.remove('active');
+        });
+
+        // Send message function
+        function sendMessage() {
+            const message = userInput.value.trim();
+            if (message === '') return;
+            
+            // Add user message
+            addMessage(message, 'user');
+            userInput.value = '';
+            
+            // Process and respond
+            setTimeout(() => {
+                let response = responses.default;
+                const lowerMessage = message.toLowerCase();
+                
+                // Emergency detection
+                if (lowerMessage.includes('emergency') || 
+                    lowerMessage.includes('heart attack') || 
+                    lowerMessage.includes('stroke') ||
+                    lowerMessage.includes('bleeding') ||
+                    lowerMessage.includes('unconscious')) {
+                    response = "This appears to be an emergency! Please call 0721902956 or 0722933485 immediately or go to our emergency department.";
+                } else {
+                    // Find matching response
+                    for (const [key, value] of Object.entries(responses)) {
+                        if (lowerMessage.includes(key)) {
+                            response = value;
+                            break;
+                        }
+                    }
+                }
+                
+                addMessage(response, 'bot');
+            }, 500);
+        }
+
+        // Add message to chat
+        function addMessage(text, sender) {
+            const messageDiv = document.createElement('div');
+            messageDiv.classList.add(`cannan-care-${sender}-message`);
+            messageDiv.innerHTML = text;
+            messagesContainer.appendChild(messageDiv);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+
+        // Event listeners
+        sendBtn.addEventListener('click', sendMessage);
+        userInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') sendMessage();
+        });
+    </script>
 </body>
 </html>
