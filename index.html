@@ -138,6 +138,133 @@
         #cannan-care-launcher i {
             font-size: 24px;
         }
+        
+        /* Medical AI Assistant Styles */
+        #medical-ai-container {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            width: 350px;
+            height: 500px;
+            border: 1px solid #4CAF50;
+            border-radius: 10px;
+            background: white;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+            z-index: 1000;
+            font-family: Arial, sans-serif;
+            transform: translateY(100%);
+            opacity: 0;
+            transition: transform 0.3s ease, opacity 0.3s ease;
+        }
+        
+        #medical-ai-container.active {
+            transform: translateY(0);
+            opacity: 1;
+        }
+        
+        #medical-ai-header {
+            background: #4CAF50;
+            color: white;
+            padding: 10px;
+            border-top-left-radius: 9px;
+            border-top-right-radius: 9px;
+            font-weight: bold;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        #medical-ai-messages {
+            flex: 1;
+            padding: 10px;
+            overflow-y: auto;
+            background: #f9f9f9;
+        }
+        
+        #medical-ai-input {
+            display: flex;
+            padding: 10px;
+            border-top: 1px solid #ddd;
+            background: white;
+        }
+        
+        #medical-ai-user-input {
+            flex: 1;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        
+        #medical-ai-send-btn {
+            margin-left: 5px;
+            padding: 8px 15px;
+            background: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        
+        .medical-ai-bot-message, .medical-ai-user-message {
+            margin: 5px 0;
+            padding: 8px 12px;
+            border-radius: 4px;
+            max-width: 80%;
+            word-wrap: break-word;
+        }
+        
+        .medical-ai-bot-message {
+            background: #e8f5e9;
+            align-self: flex-start;
+            border-bottom-left-radius: 0;
+        }
+        
+        .medical-ai-user-message {
+            background: #4CAF50;
+            color: white;
+            align-self: flex-end;
+            margin-left: auto;
+            border-bottom-right-radius: 0;
+        }
+        
+        .medical-ai-disclaimer {
+            font-size: 10px;
+            color: #666;
+            padding: 5px 10px;
+            text-align: center;
+            background: #f0f0f0;
+        }
+        
+        #medical-ai-minimize {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 18px;
+            cursor: pointer;
+        }
+        
+        #medical-ai-launcher {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            width: 60px;
+            height: 60px;
+            background: #4CAF50;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            z-index: 999;
+        }
+        
+        #medical-ai-launcher i {
+            font-size: 24px;
+        }
     </style>
 </head>
 
@@ -437,6 +564,26 @@
             <button id="cannan-care-send-btn">Send</button>
         </div>
     </div>
+    
+    <!-- Medical AI Assistant -->
+    <div id="medical-ai-launcher">
+        <i class='bx bx-plus-medical'></i>
+    </div>
+    
+    <div id="medical-ai-container">
+        <div id="medical-ai-header">
+            <span>Medical AI Assistant</span>
+            <button id="medical-ai-minimize"><i class='bx bx-minus'></i></button>
+        </div>
+        <div id="medical-ai-messages">
+            <div class="medical-ai-bot-message">Hello! I'm your Medical AI Assistant. I can provide general health information, but always consult a real doctor for serious concerns. How can I help you today?</div>
+        </div>
+        <div class="medical-ai-disclaimer">Note: This is for general information only. For medical emergencies, please call 0721902956 or 0722933485 immediately.</div>
+        <div id="medical-ai-input">
+            <input type="text" id="medical-ai-user-input" placeholder="Ask a medical question...">
+            <button id="medical-ai-send-btn">Send</button>
+        </div>
+    </div>
 
     <!-- Swiper JS -->
     <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
@@ -524,6 +671,99 @@
         sendBtn.addEventListener('click', sendMessage);
         userInput.addEventListener('keypress', (e) => {
             if (e.key === 'Enter') sendMessage();
+        });
+    </script>
+    
+    <!-- Medical AI Assistant Script -->
+    <script>
+        // DOM elements for Medical AI
+        const aiLauncher = document.getElementById('medical-ai-launcher');
+        const aiContainer = document.getElementById('medical-ai-container');
+        const aiMinimizeBtn = document.getElementById('medical-ai-minimize');
+        const aiSendBtn = document.getElementById('medical-ai-send-btn');
+        const aiUserInput = document.getElementById('medical-ai-user-input');
+        const aiMessagesContainer = document.getElementById('medical-ai-messages');
+        const OPENAI_API_KEY = 'YOUR_OPENAI_API_KEY'; // <-- Replace this with your actual API key
+
+        // Toggle AI chat visibility
+        aiLauncher.addEventListener('click', () => {
+            aiContainer.classList.toggle('active');
+        });
+
+        aiMinimizeBtn.addEventListener('click', () => {
+            aiContainer.classList.remove('active');
+        });
+
+        // Send message to AI function
+        async function sendAIMessage() {
+            const message = aiUserInput.value.trim();
+            if (message === '') return;
+            
+            // Add user message
+            addAIMessage(message, 'user');
+            aiUserInput.value = '';
+            
+            // Check for emergency keywords first
+            const lowerMessage = message.toLowerCase();
+            if (lowerMessage.includes('emergency') || 
+                lowerMessage.includes('heart attack') || 
+                lowerMessage.includes('stroke') ||
+                lowerMessage.includes('bleeding') ||
+                lowerMessage.includes('unconscious')) {
+                addAIMessage("This appears to be an emergency! Please call 0721902956 or 0722933485 immediately or go to our emergency department.", 'bot');
+                return;
+            }
+            
+            // Get AI response
+            try {
+                const response = await getAIResponse(message);
+                addAIMessage(response, 'bot');
+            } catch (error) {
+                console.error(error);
+                addAIMessage("Sorry, I'm having trouble connecting to the AI service. Please try again later.", 'bot');
+            }
+        }
+
+        // Add message to AI chat
+        function addAIMessage(text, sender) {
+            const messageDiv = document.createElement('div');
+            messageDiv.classList.add(`medical-ai-${sender}-message`);
+            messageDiv.innerHTML = text;
+            aiMessagesContainer.appendChild(messageDiv);
+            aiMessagesContainer.scrollTop = aiMessagesContainer.scrollHeight;
+        }
+
+        // Get response from OpenAI API
+        async function getAIResponse(userInput) {
+            const endpoint = 'https://api.openai.com/v1/chat/completions';
+            const headers = {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${OPENAI_API_KEY}`
+            };
+            const body = {
+                model: "gpt-4",
+                messages: [
+                    {
+                        role: "system",
+                        content: "You are a helpful and careful medical assistant for Cannan Hospital. You provide general medical information, but always recommend seeing a real doctor for serious concerns. For emergencies, direct users to call 0721902956 or 0722933485 immediately. Be concise and professional in your responses."
+                    },
+                    { role: "user", content: userInput }
+                ]
+            };
+
+            const response = await fetch(endpoint, {
+                method: 'POST',
+                headers: headers,
+                body: JSON.stringify(body)
+            });
+            const data = await response.json();
+            return data.choices[0].message.content;
+        }
+
+        // Event listeners for AI chat
+        aiSendBtn.addEventListener('click', sendAIMessage);
+        aiUserInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') sendAIMessage();
         });
     </script>
 </body>
